@@ -102,7 +102,6 @@ def events_add(request):
     if request.method == 'POST':
         request_data = json.loads(request.body)
         form = DeviceEventsForm(request_data)
-        print form
         if form.is_valid():
             owner_id = request_data["owner"]
             device_id = request_data["device"]
