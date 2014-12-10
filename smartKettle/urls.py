@@ -2,9 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 urlpatterns = patterns('',
-
     url(r'^admin/', include(admin.site.urls)),
-
     # Owners
     url(r'^api/owners/register/$', 'smart.views.register', name='owners_register'),
     url(r'^api/owners/login/$', 'smart.views.log_in', name='owners_login'),
@@ -19,4 +17,6 @@ urlpatterns = patterns('',
     url(r'^api/events/more/$', 'smart.views.events_more', name='events_more'),
 
     url(r'^api/events/ended/$', 'smart.views.events_ended', name='events_ended'),
+
+    url(r'', include('gcm.urls')),
 )

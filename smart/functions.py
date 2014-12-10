@@ -22,16 +22,17 @@ def return_error(msg):
 # extra
 def return_begin_events(owner_id, device_id=None, page=1):
     if device_id:
-        device_events = DeviceEvents.objects.filter(owner_id=owner_id, device_id=device_id, is_deleted=0)\
-            .order_by('-event_date')[:EVENTS_PER_PAGE * page]
+        device_events = DeviceEvents.objects.filter(owner_id=owner_id, device_id=device_id, is_deleted=0) \
+                            .order_by('-event_date')[:EVENTS_PER_PAGE * page]
     else:
-        device_events = DeviceEvents.objects.filter(owner_id=owner_id, is_deleted=0)\
-            .order_by('-event_date')[:EVENTS_PER_PAGE * page]
+        device_events = DeviceEvents.objects.filter(owner_id=owner_id, is_deleted=0) \
+                            .order_by('-event_date')[:EVENTS_PER_PAGE * page]
     return_data = {}
     i = 0
     for device_event in device_events:
         return_data[i] = {
             "id": device_event.pk,
+            "device_id": device_event.device_id,
             "short_news": device_event.short_news,
             "long_news": device_event.long_news,
             "event_date": reformat_date(device_event.event_date),
@@ -55,6 +56,7 @@ def return_end_events(owner_id, device_id=None, page=1):
     for device_event in device_events:
         return_data[i] = {
             "id": device_event.pk,
+            "device_id": device_event.device_id,
             "short_news": device_event.short_news,
             "long_news": device_event.long_news,
             "event_date_end": reformat_date(device_event.event_date_end)
@@ -91,7 +93,7 @@ def reformat_date(date):
 
 
 def return_current_events(owner_id):
-    device_events = DeviceEvents.objects.filter(owner_id=owner_id, event_date_end=None, is_deleted=0)\
+    device_events = DeviceEvents.objects.filter(owner_id=owner_id, event_date_end=None, is_deleted=0) \
         .order_by('event_date_begin')
     return_data = {}
     i = 0
@@ -116,10 +118,11 @@ def ended(event):
 
 
 def return_login(owner_id):
-    return_data = {"news": {
-        "begin": return_begin_events(owner_id),
-        "end": return_end_events(owner_id)
-    }, "devices": return_devices(owner_id, 1)}
+    return_data = {"owner_key": owner_id,
+                   "news": {
+                       "begin": return_begin_events(owner_id),
+                       "end": return_end_events(owner_id)
+                   }, "devices": return_devices(owner_id, 1)}
     return return_data
 
 
